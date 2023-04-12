@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.naming.NamingException;
-
+import java.sql.ResultSet;
 import fr.eni.Encheres.bo.Utilisateur;
 import fr.eni.Encheres.dal.DALException;
 import fr.eni.Encheres.dal.DBConnexion;
@@ -14,7 +14,8 @@ import fr.eni.Encheres.dal.UtilisateurDAO;
 public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 	// Constants
 	private static final String INSERER = "INSERT INTO Utilisateurs (pseudo,nom,prenom,email,telephone,rue,code_postal,ville,mot_de_passe,credit,administrateur) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
-
+	private static final String SELECT = "SELECT pseudo,nom,prenom,email,telephone,rue,code_postal,ville,credit,administrateur FROM Utilisateurs WHERE pseudo = ? AND mot_de_passe = ?;";
+	
 	/* Methode permettant d'inserer un utilisateur en BDD */
 	public void inserer(Utilisateur utilisateur) throws DALException {
 		Connection cnx = null;
@@ -23,9 +24,9 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		try {
 			cnx = DBConnexion.seConnecter();
 		} catch (DALException e) {
-			System.out.println("Erreur lors de la tentative d'insertion d'un utilisateur");
+			System.out.println("Erreur lors de la tentative de connexion à la BDD");
 		} catch (NamingException e) {
-			System.out.println("Erreur concernant les identitfiant de connexion pour la base de donnée");
+			System.out.println("Erreur concernant les identitfiant d'inscription pour la base de donnée");
 		}
 		
 		try {
@@ -47,6 +48,50 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		} finally {
 			DBConnexion.seDeconnecter(pstmt, cnx);
 		}
+	}
+	
+	public String select(String pseudo, String mot_de_passe) throws DALException {
+		Utilisateur utilisateur = new Utilisateur();
+		Connection cnx = null;
+		PreparedStatement pstmt = null;
 		
+		try {
+			cnx = DBConnexion.seConnecter();
+		} catch (DALException e) {
+			System.out.println("Erreur lors de la tentative de connexion à la BDD");
+		} catch (NamingException e) {
+			System.out.println("Erreur concernant les identitfiant de connexion pour la base de donnée");
+		}
+		
+		try {
+			pstmt= cnx.prepareStatement(SELECT);
+			pstmt.setString(1, pseudo);
+			pstmt.setString(2, mot_de_passe);
+			ResultSet rs = pstmt.executeQuery();
+			boolean premiereLigne = true;
+			
+			while(rs.next()) {
+				if(premiereLigne)
+				{
+					utilisateur.setPseudo(rs.getString("pseudo"));
+					utilisateur.setNom(rs.getString("nom"));
+					utilisateur.setPrenom(rs.getString("prenom"));
+					utilisateur.setEmail(rs.getString("email"));
+					utilisateur.setTelephone(rs.getString("telephone"));
+					utilisateur.setRue(rs.getString("rue"));
+					utilisateur.setCodePostal(rs.getString("code_postal"));
+					utilisateur.setVille(rs.getString("ville"));
+					utilisateur.setCredit(rs.getInt("credit"));
+					utilisateur.setAdministrateur(rs.getByte("administrateur"));
+					premiereLigne=false;
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Erreur lors de la tentative de connexion d'un utilisateur");
+		} finally {
+			DBConnexion.seDeconnecter(pstmt, cnx);
+		}
+		
+		return utilisateur.getPseudo();
 	}
 }

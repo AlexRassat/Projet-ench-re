@@ -44,6 +44,21 @@ public class UtilisateurManager {
 		}
 	}
 	
+	public String connecterUtilisateur(String pseudo, String mot_de_passe) throws UtilisateurException, DALException {
+		UtilisateurException UtilisateurException = new UtilisateurException();
+		this.validerPseudo(pseudo, UtilisateurException);
+		this.validerMotDePasse(mot_de_passe, UtilisateurException);
+				
+		if(!UtilisateurException.hasErreurs()) {
+			Utilisateur utilisateur = new Utilisateur();
+			utilisateur.setPseudo(pseudo);
+			utilisateur.setMotDePasse(mot_de_passe);
+			return this.utilisateurDAO.select(pseudo, mot_de_passe);
+		} else {
+			throw UtilisateurException;
+		}
+	}
+	
 	private void validerPseudo(String pseudo, UtilisateurException UtilisateurException) {
 		if(pseudo == null || pseudo.trim().length() > 30) {
 			UtilisateurException.ajouterErreur(CodesResultatBLL.ERREUR_VALEUR);

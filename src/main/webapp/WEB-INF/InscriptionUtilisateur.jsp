@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Insert title here</title>
+		<title>ENI Enchères</title>
 	</head>
 	<body class="container">
 	<h2 class="text-center">Inscription</h2>
@@ -14,7 +14,7 @@
 				<div class="col-6">
       				<label for="pseudo" class="col-2 col-form-label">Pseudo :</label>
   					<div class="col-10">
-						<input class="form-control" type="text" id="pseudo_utilisateur" name="pseudo_utilisateur" value="${param.pseudo_utilisateur}">
+						<input class="form-control" type="text" id="pseudo_utilisateur" name="pseudo_utilisateur" value="">
 					</div>
 					<label for="prenom" class="col-2 col-form-label">Prénom :</label>
   					<div class="col-10">
