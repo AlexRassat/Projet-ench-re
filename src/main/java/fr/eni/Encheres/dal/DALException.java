@@ -1,21 +1,27 @@
 package fr.eni.Encheres.dal;
 
 public class DALException extends Exception {
-	private static final long serialVersionUID = 1L;
-
-	/* constructeur (surcharge) permettant d'instancier une exception de type DALException */
+	//Constructeurs
+	public DALException() {
+		super();
+	}
+	
 	public DALException(String message) {
 		super(message);
 	}
-
-	/* constructeur (surcharge) permettant d'instancier une exception de type DALException */
-	public DALException(String message, Throwable cause) {
-		super(message, cause);
+	
+	public DALException(String message, Throwable exception) {
+		super(message, exception);
 	}
 
-	/* methode substituée permettant de retourner la valeur du message de l'exception */
+	//Methodes
 	@Override
 	public String getMessage() {
-		return "couche DAL - "+super.getMessage();
+		StringBuffer sb = new StringBuffer("Couche DAL - ");
+		sb.append(super.getMessage());
+		
+		return sb.toString() ;
 	}
+	
+	
 }

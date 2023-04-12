@@ -12,35 +12,28 @@ public class ConnectionProvider {
 	private static DataSource dataSource;
 	
 	/**
-	 * Au chargement de la classe, la DataSource est recherchée dans l'arbre JNDI
+	 * Au chargement de la classe, la DataSource est recherchÃ©e dans l'arbre JNDI
 	 */
 	static
 	{
-		Context context = null;
+		Context context;
 		try {
 			context = new InitialContext();
-			ConnectionProvider.dataSource = (DataSource)context.lookup("java:comp/env/pool_encheres");
+			ConnectionProvider.dataSource = (DataSource)context.lookup("java:comp/env/jdbc/pool_cnx");
 		} catch (NamingException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Impossible d'accéder à la base de données");
+			throw new RuntimeException("Impossible d'accÃ©der Ã  la base de donnÃ©es");
 		}
 	}
 	
 	/**
-	 * Cette méthode retourne une connection opérationnelle issue du pool de connexion
-	 * vers la base de données. 
+	 * Cette mÃ©thode retourne une connection opÃ©rationnelle issue du pool de connexion
+	 * vers la base de donnÃ©es. 
 	 * @return
 	 * @throws SQLException
 	 */
 	public static Connection getConnection() throws SQLException
 	{
 		return ConnectionProvider.dataSource.getConnection();
-	}
-	
-	
-	public static void deconnection(Connection cnx) throws SQLException {
-		if (cnx != null) {
-			cnx.close();
-		}
 	}
 }

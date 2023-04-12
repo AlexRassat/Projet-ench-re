@@ -1,6 +1,9 @@
 package fr.eni.Encheres.bo;
 
-public class Utilisateur {
+
+
+public class Utilisateur{
+
 	// Variables
 	private int noUtilisateur;
 	private String pseudo;
@@ -13,7 +16,7 @@ public class Utilisateur {
 	private String ville;
 	private String motDePasse;
 	private int credit;
-	private byte administrateur;
+	private Byte administrateur;
 	
 	// Getters and Setters
 	public int getNoUtilisateur() {
@@ -82,17 +85,19 @@ public class Utilisateur {
 	public void setCredit(int credit) {
 		this.credit = credit;
 	}
-	public byte getAdministrateur() {
+	public Byte isAdministrateur() {
 		return administrateur;
 	}
-	public void setAdministrateur(byte administrateur) {
-		this.administrateur = administrateur;
+	public void setAdministrateur(Byte administrateur2) {
+		this.administrateur = administrateur2;
 	}
 	
+	
 	// Constructor
-	public Utilisateur() {}
+	public Utilisateur() {
+	}
 	public Utilisateur(String pseudo, String nom, String prenom, String email, String telephone, String rue,
-			String codePostal, String ville, String motDePasse, int credit, byte administrateur) {
+			String codePostal, String ville, String motDePasse, int credit, Byte administrateur) {
 		setPseudo(pseudo);
 		setNom(nom);
 		setPrenom(prenom);
@@ -121,7 +126,7 @@ public class Utilisateur {
 		sb.append("ville = " + getVille() + "\n");
 		sb.append("motDePasse = " + getMotDePasse() + "\n");
 		sb.append("credit = " + getCredit() + "\n");
-		sb.append("administrateur = " + getAdministrateur() + "\n");
+		sb.append("administrateur = " + isAdministrateur() + "\n");
 		return sb.toString();
 	}
 }
