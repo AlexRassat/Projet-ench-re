@@ -19,7 +19,9 @@
   			<div class="col-10">
 				<input class="form-control" type="password" id="mot_de_passe_utilisateur" name="mot_de_passe_utilisateur" value="">
 			</div>
+			<br />
 			<a href="#">Mot de passe oublié.</a>
+			<br /><br />
 			<div>
 				<input type="submit" class="btn btn-primary"></input>
 				<a href="#connexion" class="badge text-success" title="Connexion"></a>

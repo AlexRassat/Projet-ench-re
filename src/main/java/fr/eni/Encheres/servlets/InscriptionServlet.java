@@ -1,6 +1,7 @@
 package fr.eni.Encheres.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,7 +42,7 @@ public class InscriptionServlet extends HttpServlet {
 		}
 	}
 	
-	private void ajouterUtilisateur (HttpServletRequest request, HttpServletResponse response) throws DALException {
+	private void ajouterUtilisateur (HttpServletRequest request, HttpServletResponse response) throws DALException, IOException, ServletException {
 		String pseudo = request.getParameter("pseudo_utilisateur").toString();
 		String nom = request.getParameter("nom_utilisateur").toString();
 		String prenom = request.getParameter("prenom_utilisateur").toString();
@@ -52,31 +53,16 @@ public class InscriptionServlet extends HttpServlet {
 		String ville = request.getParameter("ville_utilisateur").toString();
 		String mot_de_passe = request.getParameter("mot_de_passe_utilisateur").toString();
 		String confirmation = request.getParameter("confirmation_utilisateur").toString();
-		System.out.println("Values : " + pseudo + " / " + nom + " / " + prenom + " / " + email + " / " + telephone + " / " + rue + " / " + code_postal + " / " + ville + " / " + mot_de_passe + " / " + confirmation);
 		
-		if (
-				pseudo == null ||
-				nom == null ||
-				prenom == null ||
-				email == null ||
-				telephone == null ||
-				rue == null ||
-				code_postal == null ||
-				ville == null || 
-				mot_de_passe == null
-			) {
-			System.out.println("Tout les champs ne sont pas renseigné !");
-		} else if ( !mot_de_passe.contentEquals(confirmation) ) {
-			System.out.println("Les mots de passe ne correspondent pas !");
-		} else {
+		try {
 			UtilisateurManager utilisateurManager = new UtilisateurManager();
-			try {
-				// Auto set "credit" and "administrateur" values to 100 and 0 (non admin)
-				utilisateurManager.ajouterUtilisateur(pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, 100, (byte) 0);
-			} catch (UtilisateurException e) {
-				e.printStackTrace();
-				request.setAttribute("listeCodesErreur : ", e.getListeCodesErreur());
-			}
+			// Auto set "credit" and "administrateur" values to 100 and 0 (non admin)
+			utilisateurManager.ajouterUtilisateur(pseudo, nom, prenom, email, telephone, rue, code_postal, ville, mot_de_passe, confirmation, 100, (byte) 0);
+		} catch (UtilisateurException e) {
+			PrintWriter out = response.getWriter();
+			System.out.println("An error as occured when attemping to sign up a new user.");
+			out.println("An error as occured when attemping to sign up a new user.");
+			doGet(request, response);
 		}
 	}
 }
