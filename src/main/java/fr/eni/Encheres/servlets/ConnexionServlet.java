@@ -1,6 +1,7 @@
 package fr.eni.Encheres.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,26 +47,21 @@ public class ConnexionServlet extends HttpServlet {
 		}
 	}
 	
-	private void connecterUtilisateur (HttpServletRequest request, HttpServletResponse response) throws DALException, IOException {
+	private void connecterUtilisateur (HttpServletRequest request, HttpServletResponse response) throws DALException, IOException, ServletException {
 		String pseudo = request.getParameter("pseudo_utilisateur").toString();
 		String mot_de_passe = request.getParameter("mot_de_passe_utilisateur").toString();
 		
-		if (pseudo.contentEquals("") || mot_de_passe.contentEquals("")) {
-			System.out.println("Tout les champs ne sont pas renseigné !");
-		} else  {
-			UtilisateurManager utilisateurManager = new UtilisateurManager();
-			try {
-				String username = utilisateurManager.connecterUtilisateur(pseudo, mot_de_passe);
-				if (username != null) {
-					Cookie connexionCookie = new Cookie("username", username);
-					response.addCookie(connexionCookie);
-				} else {
-					System.out.println("Identifiant ou mot de passe incorrect !");
-					response.sendRedirect(request.getContextPath()+"/ConnexionServlet");
-				}
- 			} catch (UtilisateurException e) {
-				request.setAttribute("listeCodesErreur : ", e.getListeCodesErreur());
-			}
+		UtilisateurManager utilisateurManager = new UtilisateurManager();
+		try {
+			String username = utilisateurManager.connecterUtilisateur(pseudo, mot_de_passe);
+			System.out.println("No exceptions seem happen");
+			Cookie connexionCookie = new Cookie("username", username);
+			response.addCookie(connexionCookie);
+ 		} catch (UtilisateurException e) {
+ 			PrintWriter out = response.getWriter();
+ 			System.out.println("An error as occured when attemping to sign in the user.");
+ 			out.println("Identifiant ou mot de passe incorrect !");
+ 			doGet(request, response);
 		}
 	}
 }

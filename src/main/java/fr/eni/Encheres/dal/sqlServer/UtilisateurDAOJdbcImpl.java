@@ -6,6 +6,9 @@ import java.sql.SQLException;
 
 import javax.naming.NamingException;
 import java.sql.ResultSet;
+
+import fr.eni.Encheres.UtilisateurException;
+import fr.eni.Encheres.bll.CodesResultatBLL;
 import fr.eni.Encheres.bo.Utilisateur;
 import fr.eni.Encheres.dal.DALException;
 import fr.eni.Encheres.dal.DBConnexion;
@@ -50,7 +53,8 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 		}
 	}
 	
-	public String select(String pseudo, String mot_de_passe) throws DALException {
+	public String select(String pseudo, String mot_de_passe) throws DALException, UtilisateurException {
+		UtilisateurException UtilisateurException = new UtilisateurException();
 		Utilisateur utilisateur = new Utilisateur();
 		Connection cnx = null;
 		PreparedStatement pstmt = null;
@@ -92,6 +96,19 @@ public class UtilisateurDAOJdbcImpl implements UtilisateurDAO {
 			DBConnexion.seDeconnecter(pstmt, cnx);
 		}
 		
+		/* SQL request response can be null, in this case, Exception will be throwed */
+		validerResultat(utilisateur.getPseudo(), UtilisateurException);
+		
+		if (UtilisateurException.hasErreurs()) {
+			throw new UtilisateurException();
+		}
+		
 		return utilisateur.getPseudo();
+	}
+	
+	private void validerResultat(String pseudo, UtilisateurException UtilisateurException) {
+		if(pseudo == null) {
+			UtilisateurException.ajouterErreur(CodesResultatBLL.SQL_RESPONSE_NULL);
+		}
 	}
 }
